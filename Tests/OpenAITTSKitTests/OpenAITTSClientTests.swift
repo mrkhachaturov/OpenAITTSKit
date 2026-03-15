@@ -140,6 +140,53 @@ import Testing
         let client = OpenAITTSClient(apiKey: "sk-test", baseUrl: "https://proxy.local/v1/")
         #expect(client.baseUrl == "https://proxy.local/v1")
     }
+
+    @Test func defaultTimeout() {
+        let client = OpenAITTSClient(apiKey: "sk-test")
+        #expect(client.requestTimeoutSeconds == 30)
+    }
+
+    @Test func customTimeout() {
+        let client = OpenAITTSClient(apiKey: "sk-test", requestTimeoutSeconds: 60)
+        #expect(client.requestTimeoutSeconds == 60)
+    }
+
+    @Test func defaultMaxRetries() {
+        let client = OpenAITTSClient(apiKey: "sk-test")
+        #expect(client.maxRetries == 3)
+    }
+
+    @Test func customMaxRetries() {
+        let client = OpenAITTSClient(apiKey: "sk-test", maxRetries: 5)
+        #expect(client.maxRetries == 5)
+    }
+
+    @Test func timeoutAppliedToURLRequest() {
+        let request = OpenAITTSClient.buildURLRequest(
+            baseUrl: "https://api.openai.com/v1",
+            apiKey: "sk-test",
+            body: Data(),
+            timeoutSeconds: 45
+        )
+        #expect(request.timeoutInterval == 45)
+    }
+}
+
+@Suite struct OpenAITTSRetryTests {
+    @Test func retryableStatuses() {
+        #expect(OpenAITTSClient.isRetryableStatus(429) == true)
+        #expect(OpenAITTSClient.isRetryableStatus(500) == true)
+        #expect(OpenAITTSClient.isRetryableStatus(502) == true)
+        #expect(OpenAITTSClient.isRetryableStatus(503) == true)
+    }
+
+    @Test func nonRetryableStatuses() {
+        #expect(OpenAITTSClient.isRetryableStatus(400) == false)
+        #expect(OpenAITTSClient.isRetryableStatus(401) == false)
+        #expect(OpenAITTSClient.isRetryableStatus(403) == false)
+        #expect(OpenAITTSClient.isRetryableStatus(404) == false)
+        #expect(OpenAITTSClient.isRetryableStatus(200) == false)
+    }
 }
 
 @Suite struct OpenAITTSErrorTests {
