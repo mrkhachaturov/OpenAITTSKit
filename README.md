@@ -34,7 +34,7 @@ https://github.com/mrkhachaturov/OpenAITTSKit.git
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/mrkhachaturov/OpenAITTSKit.git", from: "0.1.0"),
+    .package(url: "https://github.com/mrkhachaturov/OpenAITTSKit.git", from: "0.2.0"),
 ]
 ```
 
@@ -60,7 +60,7 @@ for try await chunk in stream {
 
 ## Streaming
 
-The client returns an `AsyncThrowingStream<Data, Error>` of audio chunks (~8KB each). Audio starts playing as soon as the first chunk arrives — no need to wait for the full response.
+The client returns an `AsyncThrowingStream<Data, Error>` of audio chunks (~2KB each). Audio starts playing as soon as the first chunk arrives — no need to wait for the full response.
 
 ```swift
 let stream = client.streamSynthesize(
@@ -72,7 +72,7 @@ let stream = client.streamSynthesize(
 )
 
 for try await chunk in stream {
-    // Each chunk is up to 8KB of audio data.
+    // Each chunk is up to 2KB of audio data.
     // Feed to StreamingAudioPlayer, AVAudioEngine, or any player.
 }
 ```
@@ -200,13 +200,31 @@ OpenAITTSRequest.normalizeSpeed(1.5)   // → 1.5 (unchanged)
 OpenAITTSRequest.normalizeSpeed(10.0)  // → 4.0 (clamped)
 ```
 
-## Dev
+## Contributing
+
+Contributions are welcome! Please:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/my-feature`)
+3. Write tests for new functionality
+4. Ensure all tests pass (`swift test`)
+5. Submit a pull request
+
+### Development
 
 ```bash
-swift test            # Run all tests
 swift build           # Build the package
+swift test            # Run all tests (31 tests, 8 suites)
 ```
+
+### Guidelines
+
+- Follow existing code style and patterns
+- Keep zero external dependencies
+- Maintain `Sendable` conformance (strict concurrency)
+- Add tests for new features and bug fixes
+- Update `CHANGELOG.md` with your changes
 
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE) for details.
