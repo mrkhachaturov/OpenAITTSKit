@@ -18,7 +18,7 @@ public final class OpenAITTSClient: Sendable {
 
     private static let defaultBaseUrl = "https://api.openai.com/v1"
     private static let defaultTimeoutSeconds: TimeInterval = 30
-    private static let streamChunkSize = 8192
+    private static let streamChunkSize = 2048
 
     public init(apiKey: String, baseUrl: String? = nil) {
         self.apiKey = apiKey
